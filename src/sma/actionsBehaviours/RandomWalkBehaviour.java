@@ -5,6 +5,7 @@ import com.jme3.math.Vector3f;
 import env.jme.PlayerControl;
 import jade.core.behaviours.TickerBehaviour;
 import sma.AbstractAgent;
+import sma.actionsBehaviours.LegalActions.LegalAction;
 
 public class RandomWalkBehaviour extends TickerBehaviour {
 
@@ -23,6 +24,9 @@ public class RandomWalkBehaviour extends TickerBehaviour {
 		// TODO Auto-generated method stub
 		Vector3f currentpos  = ((AbstractAgent)this.myAgent).getCurrentPosition();
 		Vector3f dest = ((AbstractAgent)this.myAgent).getDestination();
+		
+		
+		
 		
 		if (dest==null || approximativeEqualsCoordinates(currentpos, dest)) {
 			((AbstractAgent)this.myAgent).randomMove();

@@ -15,6 +15,7 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import sma.agents.BasicAgent;
+import sma.agents.FollowAgent;
 
 public class Principal {
 	
@@ -26,9 +27,8 @@ public class Principal {
 	public static void main(String[] args){
 
 		//0) Create the environment
-
-		env = Environment.launchRandom(128);
-
+		//env = Environment.launchRandom(128);
+		env = Environment.launch("circleMap2");
 		
 		emptyPlatform(containerList);
 
@@ -177,7 +177,7 @@ public class Principal {
 
 
 			Object[] objtab=new Object[]{env, true};//used to give informations to the agent
-			AgentController	ag=c.createNewAgent(agentName,BasicAgent.class.getName(),objtab);
+			AgentController	ag=c.createNewAgent(agentName,FollowAgent.class.getName(),objtab);
 			agentList.add(ag);
 			System.out.println(agentName+" launched");
 		} catch (StaleProxyException e) {
