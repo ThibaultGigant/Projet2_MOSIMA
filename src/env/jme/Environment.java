@@ -756,7 +756,8 @@ public class Environment extends SimpleApplication {
 		float maxDepth = 0;
 		HashMap<Float, Integer> heights = new HashMap<Float, Integer>();
 
-
+		ArrayList<Vector3f> pointsAll = new ArrayList<Vector3f>();
+		
 		for (int x = 0; x < camera.getWidth() / 2; x = x + rayDistance) {
 			for (int y = 0; y < camera.getHeight() / 2; y = y + rayDistance) {
 
@@ -814,9 +815,11 @@ public class Environment extends SimpleApplication {
 						lowestPosition = min;
 						lowest = min.y;
 					}
-				}	      
+				}
+				pointsAll.addAll(points);
 			}
 		}
+		System.out.println(pointsAll.size() + " points intersectes | Environnement");
 		//	    System.out.println("agent's altitude : "+agentPos.y);
 		//	    System.out.println("lowest : "+lowestPosition);
 		//	    System.out.println("highest : "+highestPosition);

@@ -9,13 +9,13 @@ import env.jme.Situation;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import sma.AbstractAgent;
-import sma.actionsBehaviours.LegalActions.LegalAction;
+import sma.actionsBehaviours.LegalActions.*;
 
 public class FollowBehavior extends TickerBehaviour{
 
 	private static final long serialVersionUID = 1354354342L;
 
-	private int counter;	
+	private int counter = 0;	
 	
 	
 	public FollowBehavior(Agent a, long period) {
@@ -43,7 +43,7 @@ public class FollowBehavior extends TickerBehaviour{
 		}
 		
 		if (en == null){ // If nobody in sight, random walk
-			agent.randomMove(); 
+			agent.randomMove();
 			
 			/*LegalAction[] actions = LegalAction.values();
 			int r = 1+(int)(Math.random()*8);
@@ -60,7 +60,9 @@ public class FollowBehavior extends TickerBehaviour{
 			System.out.println("Following : "+action.id+" CRAD : "+card);
 			if (counter % 4 == 0)
 				agent.cardinalMove(action);
-			agent.lookAt(actions[card+8]);*/
+			agent.lookAt(LegalActions.MoveToLook(action));
+			//agent.lookAt(actions[card+8]);
+*/			
 			try {
 			agent.moveTo(en.getFirst());
 			agent.shoot(en.getSecond());
@@ -77,16 +79,17 @@ public class FollowBehavior extends TickerBehaviour{
 		
 		//float produitScalaire = self.x * target.x + self.y * target.y + self.z * target.z;
 		Vector3f north = new Vector3f(0, 0, 1);
+		target = new Vector3f((float) Math.cos(Math.PI/4),0,(float) Math.sin(Math.PI/4));
+		self = new Vector3f(0,0,0);
 		Vector3f orientation = target.subtract(self);
-		float produitScalaire = north.dot(orientation);
-		float norme = north.length() * orientation.length();
-		
+
 		System.out.println("self : " + self.toString() + " , target : " + target.toString());
-		//float angle = self.angleBetween(target);
+		float angle = north.angleBetween(orientation) + (float) (Math.PI - Math.PI / 8);
 		
-		float angle = (float) (Math.acos(produitScalaire / norme) + Math.PI);
-		System.out.println("Angle : " + angle);
-		return (int)(angle/Math.PI * 4)+1;
+		//float angle = (float) (Math.acos(produitScalaire / norme) + Math.PI / 8);
+		System.out.println("Angle : " + ((angle) * 180 / Math.PI));
+		System.out.println((int)(angle/Math.PI * 4)+1);
+		return 1;//
 	}
 
 }

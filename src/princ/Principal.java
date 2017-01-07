@@ -16,6 +16,7 @@ import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import sma.agents.BasicAgent;
 import sma.agents.FollowAgent;
+import sma.agents.McGyverAgent;
 
 public class Principal {
 	
@@ -177,7 +178,7 @@ public class Principal {
 
 
 			Object[] objtab=new Object[]{env, true};//used to give informations to the agent
-			AgentController	ag=c.createNewAgent(agentName,FollowAgent.class.getName(),objtab);
+			AgentController	ag=c.createNewAgent(agentName,McGyverAgent.class.getName(),objtab);
 			agentList.add(ag);
 			System.out.println(agentName+" launched");
 		} catch (StaleProxyException e) {
