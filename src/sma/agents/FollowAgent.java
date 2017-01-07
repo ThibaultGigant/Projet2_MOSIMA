@@ -37,7 +37,7 @@ public class FollowAgent extends AbstractAgent {
 			System.exit(-1);
 		}
 
-		followWalk = new FollowBehavior(this, 1000);
+		followWalk = new FollowBehavior(this, 50);
 		addBehaviour(followWalk);
 		
 		System.out.println("the player "+this.getLocalName()+ " is started. Tag (0==enemy): " + friendorFoe);

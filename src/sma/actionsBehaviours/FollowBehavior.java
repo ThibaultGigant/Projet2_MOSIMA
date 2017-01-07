@@ -13,9 +13,9 @@ import sma.actionsBehaviours.LegalActions.LegalAction;
 
 public class FollowBehavior extends TickerBehaviour{
 
-	
 	private static final long serialVersionUID = 1354354342L;
-	
+
+	private int counter;	
 	
 	
 	public FollowBehavior(Agent a, long period) {
@@ -27,6 +27,7 @@ public class FollowBehavior extends TickerBehaviour{
 
 	@Override
 	protected void onTick() {
+		counter ++;
 		
 		AbstractAgent agent = ((AbstractAgent)this.myAgent);
 		Situation current = null;
@@ -34,7 +35,7 @@ public class FollowBehavior extends TickerBehaviour{
 		current = ((AbstractAgent)this.myAgent).observeAgents();
 		
 		Tuple2<Vector3f, String> en = null;
-		System.out.println("Observe size : "+current.agents.size());
+		//System.out.println("Observe size : "+current.agents.size());
 		for(Tuple2<Vector3f, String> tuple : current.agents){
 			if (!tuple.getSecond().equals(myAgent.getLocalName())){
 				en = tuple;
@@ -42,22 +43,32 @@ public class FollowBehavior extends TickerBehaviour{
 		}
 		
 		if (en == null){ // If nobody in sight, random walk
-			System.out.println("Random Move");
-			//agent.randomMove(); 
-			LegalAction[] actions = LegalAction.values();
-			LegalAction action = actions[9+(int)(Math.random()*8)];
-			agent.lookAt(action);
+			agent.randomMove(); 
+			
+			/*LegalAction[] actions = LegalAction.values();
+			int r = 1+(int)(Math.random()*8);
+			agent.cardinalMove(actions[r]);*/
+			
 			return;
 		}
 		else
 		{
-			System.out.println("direction : " + current.direction);
+			/*System.out.println("direction : " + current.direction);
 			int card = getLegalAction(agent.getCurrentPosition(), en.getFirst());
 			LegalAction[] actions = LegalAction.values();
 			LegalAction action = actions[card];
 			System.out.println("Following : "+action.id+" CRAD : "+card);
-			agent.cardinalMove(action);
-			agent.lookAt(actions[card+8]);
+			if (counter % 4 == 0)
+				agent.cardinalMove(action);
+			agent.lookAt(actions[card+8]);*/
+			try {
+			agent.moveTo(en.getFirst());
+			agent.shoot(en.getSecond());
+			}
+			catch (Exception e)
+			{
+				System.out.println("Ne plante pas !!");
+			}
 		}
 		
 	}
