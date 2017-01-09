@@ -4,7 +4,7 @@
 package sma.roles;
 
 import sma.AbstractAgent;
-import sma.actionsBehaviours.ExploreBehaviour;
+import sma.exploreBehaviors.ExploreBehaviour;
 
 /**
  * @author mosima

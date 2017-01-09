@@ -15,7 +15,7 @@ import sma.AbstractAgent;
  */
 public abstract class AbstractRole {
     /**
-     * Liste des behaviours associés au protocole
+     * Liste des behaviours associés au role
      */
     List<Behaviour> behaviours = new ArrayList<Behaviour>();
 

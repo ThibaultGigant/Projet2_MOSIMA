@@ -10,24 +10,33 @@ import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import sma.AbstractAgent;
 import sma.actionsBehaviours.LegalActions.*;
+import utils.Utils;
 
+/**
+ * Classe codant pour le comportement d'un agent qui en suivrait un autre. S'il n'a personne en vue, il fait un random walk, sinon il fonce sur l'agent en vue. 
+ * @author mosima
+ *
+ */
 public class FollowBehavior extends TickerBehaviour{
 
-	private static final long serialVersionUID = 1354354342L;
-
-	private int counter = 0;	
+	private static final long serialVersionUID = 1354354342L;	
 	
-	
+	/**
+	 * Constructeur
+	 * @param a Agent qui possede ce behaviour
+	 * @param period Temps entre deux execution du behaviour
+	 */
 	public FollowBehavior(Agent a, long period) {
 		super(a, period);
 		
 	}
 
 	
-
+	/**
+	 * Methode executee a chaque tick
+	 */
 	@Override
 	protected void onTick() {
-		counter ++;
 		
 		AbstractAgent agent = ((AbstractAgent)this.myAgent);
 		Situation current = null;
@@ -35,7 +44,6 @@ public class FollowBehavior extends TickerBehaviour{
 		current = ((AbstractAgent)this.myAgent).observeAgents();
 		
 		Tuple2<Vector3f, String> en = null;
-		//System.out.println("Observe size : "+current.agents.size());
 		for(Tuple2<Vector3f, String> tuple : current.agents){
 			if (!tuple.getSecond().equals(myAgent.getLocalName())){
 				en = tuple;
@@ -43,53 +51,24 @@ public class FollowBehavior extends TickerBehaviour{
 		}
 		
 		if (en == null){ // If nobody in sight, random walk
-			agent.randomMove();
-			
-			/*LegalAction[] actions = LegalAction.values();
-			int r = 1+(int)(Math.random()*8);
-			agent.cardinalMove(actions[r]);*/
+			Vector3f dest = ((AbstractAgent) this.myAgent).getDestination();
+			if (dest == null || Utils.onDestination(((AbstractAgent) this.myAgent).getCurrentPosition(), dest))
+				agent.randomMove();
 			
 			return;
 		}
-		else
+		else // else, run to the agent and shoot
 		{
-			/*System.out.println("direction : " + current.direction);
-			int card = getLegalAction(agent.getCurrentPosition(), en.getFirst());
-			LegalAction[] actions = LegalAction.values();
-			LegalAction action = actions[card];
-			System.out.println("Following : "+action.id+" CRAD : "+card);
-			if (counter % 4 == 0)
-				agent.cardinalMove(action);
-			agent.lookAt(LegalActions.MoveToLook(action));
-			//agent.lookAt(actions[card+8]);
-*/			
 			try {
 			agent.moveTo(en.getFirst());
 			agent.shoot(en.getSecond());
 			}
 			catch (Exception e)
 			{
-				System.out.println("Ne plante pas !!");
+				System.out.println("Agent ennemi tue, mais ne plante pas !!");
 			}
 		}
 		
-	}
-	
-	public static int getLegalAction(Vector3f self, Vector3f target){
-		
-		//float produitScalaire = self.x * target.x + self.y * target.y + self.z * target.z;
-		Vector3f north = new Vector3f(0, 0, 1);
-		target = new Vector3f((float) Math.cos(Math.PI/4),0,(float) Math.sin(Math.PI/4));
-		self = new Vector3f(0,0,0);
-		Vector3f orientation = target.subtract(self);
-
-		System.out.println("self : " + self.toString() + " , target : " + target.toString());
-		float angle = north.angleBetween(orientation) + (float) (Math.PI - Math.PI / 8);
-		
-		//float angle = (float) (Math.acos(produitScalaire / norme) + Math.PI / 8);
-		System.out.println("Angle : " + ((angle) * 180 / Math.PI));
-		System.out.println((int)(angle/Math.PI * 4)+1);
-		return 1;//
 	}
 
 }

@@ -12,6 +12,7 @@ import sma.actionsBehaviours.FollowBehavior;
 import sma.prolog.PrologStrategies;
 import sma.roles.AbstractRole;
 import sma.roles.Explorer;
+import utils.Utils;
 
 public class McGyverAgent extends AbstractAgent {
 	/**
@@ -86,8 +87,7 @@ public class McGyverAgent extends AbstractAgent {
 		this.lowPoints = new ArrayList<Vector3f>();
 		this.lowVisibilityPoints = new ArrayList<Vector3f>();
 
-		//followWalk = new FollowBehavior(this, 50);
-		//addBehaviour(followWalk);
+		//addBehaviour(new FollowBehavior(this, 50));
 		
 		role = new Explorer();
 		role.addBehaviours(this);
@@ -108,6 +108,34 @@ public class McGyverAgent extends AbstractAgent {
         // Change le protocole et l'applique
         this.role = role;
         this.role.addBehaviours(this);
+    }
+    
+    /**
+     * Informe sur la presence ou nom du point passe en parametres dans la liste des points d'altitude elevee connus 
+     * @param point Point a tester
+     * @return Vrai si le point est dans la liste, faux sinon
+     */
+    public boolean knowsHighPoint(Vector3f point)
+    {
+    	for (Vector3f vector : highPoints) {
+			if (Utils.onDestination(point, vector))
+				return true;
+		}
+    	return false;
+    }
+    
+    /**
+     * Informe sur la presence ou nom du point passe en parametres dans la liste des points de basse altitude connus 
+     * @param point Point a tester
+     * @return Vrai si le point est dans la liste, faux sinon
+     */
+    public boolean knowsLowPoint(Vector3f point)
+    {
+    	for (Vector3f vector : lowPoints) {
+			if (Utils.onDestination(point, vector))
+				return true;
+		}
+    	return false;
     }
 	
 	

@@ -1,5 +1,5 @@
 
-package sma.actionsBehaviours;
+package sma.exploreBehaviors;
 
 import org.jpl7.Query;
 import org.omg.Messaging.SyncScopeHelper;
@@ -13,34 +13,68 @@ import sma.agents.McGyverAgent;
 import sma.prolog.PrologStrategies;
 import utils.Utils;
 
+/**
+ * Behaviour d'exploration
+ * L'agent parcourra la carte en visant continuellement le plus haut point qu'il a en vue
+ * @author mosima
+ *
+ */
 public class ExploreBehaviour extends TickerBehaviour{
 
 	private static final long serialVersionUID = 1354354342L;	
-	
+	/**
+	 * Destination courante suivie par l'agent
+	 */
 	Vector3f destination;
-	
+	/**
+	 * Agent proprietaire de ce Behaviour
+	 */
 	McGyverAgent agent;
-	
+	/**
+	 * Booleen qui signifie si l'agent est en train de se diriger vers un sommet ou de faire un random walk
+	 */
 	private boolean followSommet = false;
-	
+	/**
+	 * Constructeur
+	 * @param a Agent proprietaire du behaviour
+	 * @param period Temps entre deux execution de ce behaviour
+	 */
 	public ExploreBehaviour(Agent a, long period) {
 		super(a, period);
 		agent = ((McGyverAgent)this.myAgent);
 		
+		// Chargement du fichier Prolog contenant le processus decisionnel
 		String query = "consult('./ressources/prolog/Strategies/strategyOne.pl')";
 		System.out.println(query+" ?: "+Query.hasSolution(query));
 	}
 
+	/**
+	 * Methode appelee a chaque tick
+	 * On prend le point le plus haut dans la situation courante, et on s'y dirige
+	 */
 	@Override
 	protected void onTick() {
 		agent.situation = agent.observeAgents();
+		Vector3f highestPoint = agent.situation.maxAltitude;
+		Vector3f currentPos = agent.getCurrentPosition();
 		
+		System.out.println(destination + " " + currentPos + "\n");
 		
-		System.out.println(destination + " " + agent.getCurrentPosition() + "\n");
-		
-		if (destination == null || Utils.onDestination(agent.getCurrentPosition(), destination))
+		// Mise a jour de la destination en cas de besoin
+		if (destination == null || Utils.onDestination(currentPos, destination) || highestPoint.y > destination.y)
 		{
-			if (destination != null && Utils.onDestination(agent.getCurrentPosition(), destination) && followSommet)
+			// Si on trouve un sommet plus haut et plus pres, on y va
+			if (destination != null && 
+					highestPoint.y > destination.y && 
+					!(agent.knowsHighPoint(highestPoint)) &&
+					currentPos.distance(highestPoint) < currentPos.distance(destination))
+			{
+				System.out.println("Point plus haut et plus proche trouve en chemin");
+				destination = highestPoint;
+			}
+			
+			// Si on est arrive, on choisit un nouveau sommet et on y va
+			if (destination != null && Utils.onDestination(currentPos, destination) && followSommet)
 			{
 				System.out.println("Je suis au highest point voulu : explorebehaviour");
 				agent.highPoints.add(destination);
@@ -92,6 +126,10 @@ public class ExploreBehaviour extends TickerBehaviour{
 			destination = highestPoint;
 		}
 	}
+	
+	/**
+	 * Appel a prolog
+	 */
 	private void prologCall()
 	{
 		System.out.println("**inSight**");

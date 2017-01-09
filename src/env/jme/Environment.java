@@ -819,7 +819,7 @@ public class Environment extends SimpleApplication {
 				pointsAll.addAll(points);
 			}
 		}
-		System.out.println(pointsAll.size() + " points intersectes | Environnement");
+		// System.out.println(pointsAll.size() + " points intersectes | Environnement");
 		//	    System.out.println("agent's altitude : "+agentPos.y);
 		//	    System.out.println("lowest : "+lowestPosition);
 		//	    System.out.println("highest : "+highestPosition);
