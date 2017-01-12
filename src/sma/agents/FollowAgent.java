@@ -1,8 +1,10 @@
 package sma.agents;
 
 import env.jme.Environment;
+import env.jme.Situation;
 import sma.AbstractAgent;
 import sma.actionsBehaviours.FollowBehavior;
+import sma.prolog.PrologStrategies;
 
 public class FollowAgent extends AbstractAgent {
 	/**
@@ -17,8 +19,12 @@ public class FollowAgent extends AbstractAgent {
 	
 	public FollowBehavior followWalk;
 	
+	public Situation situation;
+	
 	protected void setup(){
 		super.setup();
+		
+		PrologStrategies.followList.put(this.getLocalName(), this);
 		
 		//get the parameters given into the object[]. In the current case, the environment where the agent will evolve
 		final Object[] args = getArguments();
@@ -37,7 +43,7 @@ public class FollowAgent extends AbstractAgent {
 			System.exit(-1);
 		}
 
-		followWalk = new FollowBehavior(this, 50);
+		followWalk = new FollowBehavior(this, 1000);
 		addBehaviour(followWalk);
 		
 		System.out.println("the player "+this.getLocalName()+ " is started. Tag (0==enemy): " + friendorFoe);

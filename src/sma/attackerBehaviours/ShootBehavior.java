@@ -1,12 +1,15 @@
-package sma.attacker;
+package sma.attackerBehaviours;
 
 import com.jme3.math.Vector3f;
 
 import dataStructures.tuple.Tuple2;
 import env.jme.Situation;
+import jade.content.schema.facets.CardinalityFacet;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import sma.AbstractAgent;
+import sma.actionsBehaviours.LegalActions;
+import sma.actionsBehaviours.LegalActions.LegalAction;
 import sma.agents.McGyverAgent;
 import utils.Utils;
 
@@ -15,16 +18,18 @@ import utils.Utils;
  * @author mosima
  *
  */
-public class FollowBehavior extends TickerBehaviour{
+public class ShootBehavior extends TickerBehaviour{
 
 	private static final long serialVersionUID = 1354354342L;	
+	
+	private McGyverAgent agent = ((McGyverAgent)this.myAgent);
 	
 	/**
 	 * Constructeur
 	 * @param a Agent qui possede ce behaviour
 	 * @param period Temps entre deux execution du behaviour
 	 */
-	public FollowBehavior(Agent a, long period) {
+	public ShootBehavior(Agent a, long period) {
 		super(a, period);
 	}
 
@@ -34,11 +39,12 @@ public class FollowBehavior extends TickerBehaviour{
 	 */
 	@Override
 	protected void onTick() {
-		
-		McGyverAgent agent = ((McGyverAgent)this.myAgent);
 		Situation current = null;
 		
 		current = agent.situation;
+		
+		if (current == null)
+			return;
 		
 		Tuple2<Vector3f, String> en = null;
 		for(Tuple2<Vector3f, String> tuple : current.agents){
@@ -47,27 +53,15 @@ public class FollowBehavior extends TickerBehaviour{
 			}
 		}
 		
-		if (en == null){ // If nobody in sight, random walk
-			Vector3f dest = ((AbstractAgent) this.myAgent).getDestination();
-			if (dest == null || Utils.onDestination(((AbstractAgent) this.myAgent).getCurrentPosition(), dest))
-			{
-				agent.randomMove();
-			}
+		if (en != null){ // If nobody in sight, random walk
+			//System.out.println(this.myAgent.getLocalName() + " devrait shoot " + en.getSecond());
 			
-			return;
-		}
-		else // else, run to the agent and shoot
-		{
 			try {
-				if (Utils.distance(agent.getCurrentPosition(), en.getFirst()) > 5 )
-					agent.moveTo(en.getFirst());
-				else
-					agent.moveTo(agent.getCurrentPosition());
-			//agent.shoot(en.getSecond());
+				agent.shoot(en.getSecond());
 			}
 			catch (Exception e)
 			{
-				System.out.println("Agent ennemi tue, mais ne plante pas !!");
+				System.out.println("Agent ennemi tue !!");
 			}
 		}
 		

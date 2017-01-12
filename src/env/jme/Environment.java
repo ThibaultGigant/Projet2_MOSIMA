@@ -49,9 +49,11 @@ import com.jogamp.opengl.math.geom.Frustum;
 
 import dataStructures.tuple.Tuple2;
 import env.terrain.TerrainTools;
+import princ.Principal;
 import sma.actionsBehaviours.LegalActions;
 import sma.actionsBehaviours.LegalActions.LegalAction;
 import sma.actionsBehaviours.LegalActions.Orientation;
+import sma.prolog.PrologStrategies;
 
 
 /**
@@ -611,12 +613,20 @@ public class Environment extends SimpleApplication {
 	 */
 	public boolean shoot(String agent, String enemy) {
 		if (players.containsKey(agent) && players.containsKey(enemy)) {
+			//System.out.println("Shoot Environnement : a passe le premier test");
 
 			Vector3f origin = getCurrentPosition(agent);
 			Vector3f target = getCurrentPosition(enemy);
 			Vector3f dir = target.subtract(origin).normalize();
+			boolean flag;
 
-			if (isVisible(agent, enemy)) {
+			flag = (PrologStrategies.agentList.containsKey(agent) && PrologStrategies.agentList.get(agent).situation.agents.size() > 0)
+					|| (PrologStrategies.followList.containsKey(agent) && PrologStrategies.followList.get(agent).situation.agents.size() > 0)
+					|| isVisible(agent, enemy);
+				
+			
+			if (flag) {
+				//System.out.println("Shoot Environnement : a passe le second test");
 				//				// arrow
 				//				((Arrow) (marks.get(agent).getMesh())).setArrowExtent(Vector3f.UNIT_Z.mult(origin.distance(closest.getContactPoint())));
 				//				marks.get(agent).setLocalTranslation(closest.getContactPoint());
@@ -639,6 +649,7 @@ public class Environment extends SimpleApplication {
 
 					int enemyLife = ((int)players.get(enemy).getUserData("life"))-DAMAGE;
 					if (enemyLife<=0) {
+						Principal.done();
 						System.out.println(enemy+" killed.");
 						explode(target);
 						//			                	playersNode.detachChildNamed(enemy);

@@ -1,4 +1,4 @@
-package sma.attacker;
+package sma.attackerBehaviours;
 
 import com.jme3.math.Vector3f;
 
@@ -15,7 +15,7 @@ import utils.Utils;
  * @author mosima
  *
  */
-public class ShootBehavior extends TickerBehaviour{
+public class FollowBehavior extends TickerBehaviour{
 
 	private static final long serialVersionUID = 1354354342L;	
 	
@@ -24,7 +24,7 @@ public class ShootBehavior extends TickerBehaviour{
 	 * @param a Agent qui possede ce behaviour
 	 * @param period Temps entre deux execution du behaviour
 	 */
-	public ShootBehavior(Agent a, long period) {
+	public FollowBehavior(Agent a, long period) {
 		super(a, period);
 	}
 
@@ -40,9 +40,6 @@ public class ShootBehavior extends TickerBehaviour{
 		
 		current = agent.situation;
 		
-		if (current == null)
-			return;
-		
 		Tuple2<Vector3f, String> en = null;
 		for(Tuple2<Vector3f, String> tuple : current.agents){
 			if (!tuple.getSecond().equals(myAgent.getLocalName())){
@@ -50,9 +47,23 @@ public class ShootBehavior extends TickerBehaviour{
 			}
 		}
 		
-		if (en != null){ // If nobody in sight, random walk
+		if (en == null){ // If nobody in sight, random walk
+			Vector3f dest = ((AbstractAgent) this.myAgent).getDestination();
+			if (dest == null || Utils.onDestination(((AbstractAgent) this.myAgent).getCurrentPosition(), dest))
+			{
+				agent.randomMove();
+			}
+			
+			return;
+		}
+		else // else, run to the agent and shoot
+		{
 			try {
-				agent.shoot(en.getSecond());
+				if (Utils.distance(agent.getCurrentPosition(), en.getFirst()) > 5 )
+					agent.moveTo(en.getFirst());
+				else
+					agent.moveTo(agent.getCurrentPosition());
+			//agent.shoot(en.getSecond());
 			}
 			catch (Exception e)
 			{

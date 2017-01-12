@@ -22,6 +22,7 @@ public class Principal {
 	private static HashMap<String, ContainerController> containerList=new HashMap<String, ContainerController>();// container's name - container's ref
 	private static List<AgentController> agentList;// agents's ref
 	private static Environment env;// static ref of the real environment
+	private static long startTime; // Date de debut de la simulation
 
 	public static void main(String[] args){
 
@@ -36,6 +37,7 @@ public class Principal {
 		agentList=createAgents(containerList);
 
 		//3) launch agents
+		startTime = System.currentTimeMillis();
 		startAgents(agentList);
 
 	}
@@ -176,7 +178,7 @@ public class Principal {
 		try {
 
 
-			Object[] objtab=new Object[]{env, true, "Highest"};//used to give informations to the agent
+			Object[] objtab=new Object[]{env, true, "Nearest"};//used to give informations to the agent
 			AgentController	ag=c.createNewAgent(agentName,McGyverAgent.class.getName(),objtab);
 			agentList.add(ag);
 			System.out.println(agentName+" launched");
@@ -192,8 +194,8 @@ public class Principal {
 
 			/*Object[] objtab=new Object[]{env, false};//used to give informations to the agent
 			AgentController	ag=c.createNewAgent(agentName,BasicAgent.class.getName(),objtab);*/
-			Object[] objtab=new Object[]{env, true};//used to give informations to the agent
-			AgentController	ag=c.createNewAgent(agentName,BasicAgent.class.getName(),objtab);
+			Object[] objtab=new Object[]{env, false, "Highest"};//used to give informations to the agent
+			AgentController	ag=c.createNewAgent(agentName,McGyverAgent.class.getName(),objtab);
 			agentList.add(ag);
 			System.out.println(agentName+" launched");
 		} catch (StaleProxyException e) {
@@ -223,5 +225,10 @@ public class Principal {
 
 		}
 		System.out.println("Agents started...");
+	}
+	
+	public static void done()
+	{
+		System.out.println("La simulation a dure : " + ((float) (System.currentTimeMillis() - startTime) / 1000) + "secondes");
 	}
 }

@@ -8,6 +8,7 @@ import org.jpl7.Integer;
 
 import com.jme3.math.Vector3f;
 
+import sma.agents.FollowAgent;
 import sma.agents.McGyverAgent;
 import utils.Utils;
 
@@ -18,6 +19,8 @@ public class PrologStrategies {
 	 * et les valeurs sont les pointeurs vers les agents
 	 */
 	public static HashMap<String, McGyverAgent> agentList = new HashMap<String, McGyverAgent>();
+	
+	public static HashMap<String, FollowAgent> followList = new HashMap<String, FollowAgent>();
 	
 	/**
 	 * Indique si l'agent dont le nom est passé en parametre est sur un des points d'altitude elevee qu'il a reperes
@@ -117,6 +120,18 @@ public class PrologStrategies {
 		McGyverAgent agent = (McGyverAgent) agentList.get(agentName);
 		//return new Integer((int) (System.currentTimeMillis() - agent.role.creationTime) / 1000);
 		return (int) (System.currentTimeMillis() - agent.roleObj.creationTime) / 1000;
+	}
+
+	/**
+	 * Indique depuis combien de temps l'agent a ete cree
+	 * @param agentName Le nom de l'agent
+	 * @return Le nombre de seconde depuis sa creation
+	 */
+	public static int timeSinceCreation(String agentName)
+	{
+		McGyverAgent agent = (McGyverAgent) agentList.get(agentName);
+		//return new Integer((int) (System.currentTimeMillis() - agent.role.creationTime) / 1000);
+		return (int) (System.currentTimeMillis() - agent.creationTime) / 1000;
 	}
 	
 	/**

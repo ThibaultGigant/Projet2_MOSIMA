@@ -69,6 +69,9 @@ isSafe(X) :-
 timeOfRole(X,R) :-
 		jpl_call('sma.prolog.PrologStrategies', timeOfRole,[X],R).
 
+timeSinceCreation(X, R) :-
+		jpl_call('sma.prolog.PrologStrategies', timeSinceCreation,[X],R).
+
 % Renvoie dans R le temps depuis que l'agent X n'a plus bouge
 noMoveTime(X,R) :-
 		jpl_call('sma.prolog.PrologStrategies', noMoveTime,[X],R).
@@ -107,10 +110,19 @@ explorateurToFuite(X) :-
 
 % Choix du comportement a suivre
 explorateur(X, campeur) :-
+	timeSinceCreation(X,R),
+	R > 20,
 	explorateurToCampeur(X).
 
-explorateur(X, attacker) :- explorateurToAttack(X).
-explorateur(X, fuite) :- explorateurToFuite(X).
+explorateur(X, attacker) :-
+	timeSinceCreation(X,R),
+	R > 20,
+	explorateurToAttack(X).
+
+explorateur(X, fuite) :-
+	timeSinceCreation(X,R),
+	R > 20,
+	explorateurToFuite(X).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

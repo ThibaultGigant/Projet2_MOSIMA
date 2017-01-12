@@ -15,7 +15,7 @@ public class Explorer extends AbstractRole {
 
 	@Override
 	public void addBehaviours(AbstractAgent myAgent) {
-		System.out.println("Joue le role d'explorateur");
+		System.out.println(myAgent.getLocalName() + " joue le role d'explorateur");
 		behaviours.add(new ObserveBehaviour(myAgent, 300));
 		//behaviours.add(new ExploreBehaviour(myAgent, 600));
 		//behaviours.add(new FollowBehavior(myAgent, 600));

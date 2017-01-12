@@ -49,7 +49,9 @@ public class LookForHighPoint extends TickerBehaviour{
 	 */
 	@Override
 	protected void onTick() {
-		agent.situation = agent.observeAgents();
+		if (agent.situation == null)
+			return;
+		
 		Vector3f highestPoint = agent.situation.maxAltitude;
 		Vector3f currentPos = agent.getCurrentPosition();
 		

@@ -7,6 +7,8 @@ import env.jme.Situation;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import sma.AbstractAgent;
+import sma.actionsBehaviours.LegalActions.LegalAction;
+import sma.agents.FollowAgent;
 import utils.Utils;
 
 /**
@@ -16,7 +18,9 @@ import utils.Utils;
  */
 public class FollowBehavior extends TickerBehaviour{
 
-	private static final long serialVersionUID = 1354354342L;	
+	private static final long serialVersionUID = 1354354342L;
+	private long startTime;
+	private Vector3f destination;
 	
 	/**
 	 * Constructeur
@@ -25,6 +29,7 @@ public class FollowBehavior extends TickerBehaviour{
 	 */
 	public FollowBehavior(Agent a, long period) {
 		super(a, period);
+		startTime = System.currentTimeMillis();
 	}
 
 	
@@ -34,14 +39,23 @@ public class FollowBehavior extends TickerBehaviour{
 	@Override
 	protected void onTick() {
 		
-		AbstractAgent agent = ((AbstractAgent)this.myAgent);
+		FollowAgent agent = ((FollowAgent)this.myAgent);
 		Situation current = null;
+		Vector3f dest = ((AbstractAgent) this.myAgent).getDestination();
+		
+		if (System.currentTimeMillis() - startTime < 20000)
+		{
+			if ((dest == null || Utils.onDestination(((AbstractAgent) this.myAgent).getCurrentPosition(), dest)))
+				agent.randomMove();
+			return;
+		}
 		
 		try {
 			current = ((AbstractAgent)this.myAgent).observeAgents();
+			agent.situation = current;
 		}
 		catch (Exception e) {
-			System.out.println("FollowBehabiour : Observe n'a pas marche");
+			System.out.println("FollowBehabiour : Observe n'a pas marche (agent " + this.myAgent.getLocalName() + ")");
 		}
 		
 		if (current == null)
@@ -55,7 +69,6 @@ public class FollowBehavior extends TickerBehaviour{
 		}
 		
 		if (en == null){ // If nobody in sight, random walk
-			Vector3f dest = ((AbstractAgent) this.myAgent).getDestination();
 			if (dest == null || Utils.onDestination(((AbstractAgent) this.myAgent).getCurrentPosition(), dest))
 			{
 				agent.randomMove();
@@ -67,6 +80,7 @@ public class FollowBehavior extends TickerBehaviour{
 		{
 			try {
 				agent.moveTo(en.getFirst());
+				
 				agent.shoot(en.getSecond());
 			}
 			catch (Exception e)

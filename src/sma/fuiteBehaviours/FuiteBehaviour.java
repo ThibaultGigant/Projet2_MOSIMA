@@ -74,7 +74,13 @@ public class FuiteBehaviour extends SimpleBehaviour {
 		else
 			this.sommet = sommet;
 		
-		System.out.println(this.sommet);
+		if (this.sommet == null)
+		{
+			this.agent.randomMove();
+			this.sommet = this.agent.getDestination();
+		}
+		agent.moveTo(this.sommet);
+		
 	}
 	
 	/**
@@ -83,7 +89,12 @@ public class FuiteBehaviour extends SimpleBehaviour {
 	 */
 	@Override
 	public void action() {
-		agent.moveTo(sommet);
+		//System.out.println("Destination : " + this.sommet + " current position : " + this.agent.getCurrentPosition());
+		if (Utils.onDestination(this.agent.getCurrentPosition(), this.sommet))
+		{
+			//System.out.println("Nouvelle destination a choisir");
+			chooseSommet();
+		}
 	}
 	
 	@Override

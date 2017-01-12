@@ -50,7 +50,7 @@ public class ObserveBehaviour extends TickerBehaviour {
 		// TODO Auto-generated method stub
 		try {
 			this.agent.situation = this.agent.observeAgents();
-			//System.out.println("Observe : reussite " + this.agent.getLocalName());
+			//System.out.println("ObserveBehaviours : Observe a reussi pour l'agent " + this.agent.getLocalName());
 		
 			// Mise a jour de la date de derniere rencontre avec l'ennemi
 			if (agent.situation.agents.size() > 0)

@@ -31,6 +31,11 @@ public class McGyverAgent extends AbstractAgent {
 	public Situation situation;
 	
 	/**
+	 * Date de creation de l'agent
+	 */
+	public long creationTime;
+	
+	/**
 	 * Derniere date ou l'agent a bouge
 	 */
 	public int lastMove = 0;
@@ -82,6 +87,8 @@ public class McGyverAgent extends AbstractAgent {
 	
 	protected void setup(){
 		super.setup();
+		
+		this.creationTime = System.currentTimeMillis();
 		
 		
 		//get the parameters given into the object[]. In the current case, the environment where the agent will evolve
