@@ -1,4 +1,4 @@
-package sma.actionsBehaviours;
+package sma.attacker;
 
 import com.jme3.math.Vector3f;
 
@@ -7,6 +7,7 @@ import env.jme.Situation;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import sma.AbstractAgent;
+import sma.agents.McGyverAgent;
 import utils.Utils;
 
 /**
@@ -14,7 +15,7 @@ import utils.Utils;
  * @author mosima
  *
  */
-public class FollowBehavior extends TickerBehaviour{
+public class ShootBehavior extends TickerBehaviour{
 
 	private static final long serialVersionUID = 1354354342L;	
 	
@@ -23,7 +24,7 @@ public class FollowBehavior extends TickerBehaviour{
 	 * @param a Agent qui possede ce behaviour
 	 * @param period Temps entre deux execution du behaviour
 	 */
-	public FollowBehavior(Agent a, long period) {
+	public ShootBehavior(Agent a, long period) {
 		super(a, period);
 	}
 
@@ -34,15 +35,10 @@ public class FollowBehavior extends TickerBehaviour{
 	@Override
 	protected void onTick() {
 		
-		AbstractAgent agent = ((AbstractAgent)this.myAgent);
+		McGyverAgent agent = ((McGyverAgent)this.myAgent);
 		Situation current = null;
 		
-		try {
-			current = ((AbstractAgent)this.myAgent).observeAgents();
-		}
-		catch (Exception e) {
-			System.out.println("FollowBehabiour : Observe n'a pas marche");
-		}
+		current = agent.situation;
 		
 		if (current == null)
 			return;
@@ -54,19 +50,8 @@ public class FollowBehavior extends TickerBehaviour{
 			}
 		}
 		
-		if (en == null){ // If nobody in sight, random walk
-			Vector3f dest = ((AbstractAgent) this.myAgent).getDestination();
-			if (dest == null || Utils.onDestination(((AbstractAgent) this.myAgent).getCurrentPosition(), dest))
-			{
-				agent.randomMove();
-			}
-			
-			return;
-		}
-		else // else, run to the agent and shoot
-		{
+		if (en != null){ // If nobody in sight, random walk
 			try {
-				agent.moveTo(en.getFirst());
 				agent.shoot(en.getSecond());
 			}
 			catch (Exception e)

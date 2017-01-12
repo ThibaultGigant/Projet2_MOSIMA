@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.jme3.app.SimpleApplication;
-
 import env.jme.Environment;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -29,7 +27,8 @@ public class Principal {
 
 		//0) Create the environment
 		//env = Environment.launchRandom(128);
-		env = Environment.launch("circleMap2");
+		env = Environment.launch("PerlinMap");
+		//env = Environment.launch("circleMap2");
 		
 		emptyPlatform(containerList);
 
@@ -177,7 +176,7 @@ public class Principal {
 		try {
 
 
-			Object[] objtab=new Object[]{env, true};//used to give informations to the agent
+			Object[] objtab=new Object[]{env, true, "Highest"};//used to give informations to the agent
 			AgentController	ag=c.createNewAgent(agentName,McGyverAgent.class.getName(),objtab);
 			agentList.add(ag);
 			System.out.println(agentName+" launched");
@@ -191,7 +190,9 @@ public class Principal {
 		try {
 
 
-			Object[] objtab=new Object[]{env, false};//used to give informations to the agent
+			/*Object[] objtab=new Object[]{env, false};//used to give informations to the agent
+			AgentController	ag=c.createNewAgent(agentName,BasicAgent.class.getName(),objtab);*/
+			Object[] objtab=new Object[]{env, true};//used to give informations to the agent
 			AgentController	ag=c.createNewAgent(agentName,BasicAgent.class.getName(),objtab);
 			agentList.add(ag);
 			System.out.println(agentName+" launched");

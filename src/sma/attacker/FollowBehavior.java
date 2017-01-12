@@ -1,4 +1,4 @@
-package sma.actionsBehaviours;
+package sma.attacker;
 
 import com.jme3.math.Vector3f;
 
@@ -7,6 +7,7 @@ import env.jme.Situation;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import sma.AbstractAgent;
+import sma.agents.McGyverAgent;
 import utils.Utils;
 
 /**
@@ -34,18 +35,10 @@ public class FollowBehavior extends TickerBehaviour{
 	@Override
 	protected void onTick() {
 		
-		AbstractAgent agent = ((AbstractAgent)this.myAgent);
+		McGyverAgent agent = ((McGyverAgent)this.myAgent);
 		Situation current = null;
 		
-		try {
-			current = ((AbstractAgent)this.myAgent).observeAgents();
-		}
-		catch (Exception e) {
-			System.out.println("FollowBehabiour : Observe n'a pas marche");
-		}
-		
-		if (current == null)
-			return;
+		current = agent.situation;
 		
 		Tuple2<Vector3f, String> en = null;
 		for(Tuple2<Vector3f, String> tuple : current.agents){
@@ -66,8 +59,11 @@ public class FollowBehavior extends TickerBehaviour{
 		else // else, run to the agent and shoot
 		{
 			try {
-				agent.moveTo(en.getFirst());
-				agent.shoot(en.getSecond());
+				if (Utils.distance(agent.getCurrentPosition(), en.getFirst()) > 5 )
+					agent.moveTo(en.getFirst());
+				else
+					agent.moveTo(agent.getCurrentPosition());
+			//agent.shoot(en.getSecond());
 			}
 			catch (Exception e)
 			{

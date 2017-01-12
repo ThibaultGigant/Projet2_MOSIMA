@@ -4,22 +4,20 @@
 package sma.roles;
 
 import sma.AbstractAgent;
-import sma.exploreBehaviors.LookForHighPoint;
+import sma.campeurBehaviours.GoToHighPointBehaviour;
 import sma.observeBehaviours.ObserveBehaviour;
 
 /**
  * @author mosima
  *
  */
-public class Explorer extends AbstractRole {
+public class Campeur extends AbstractRole {
 
 	@Override
 	public void addBehaviours(AbstractAgent myAgent) {
-		System.out.println("Joue le role d'explorateur");
+		System.out.println("Joue le role de campeur");
 		behaviours.add(new ObserveBehaviour(myAgent, 300));
-		//behaviours.add(new ExploreBehaviour(myAgent, 600));
-		//behaviours.add(new FollowBehavior(myAgent, 600));
-		behaviours.add(new LookForHighPoint(myAgent, 600));
+		behaviours.add(new GoToHighPointBehaviour(myAgent));
         behaviours.forEach(myAgent::addBehaviour);
 	}
 
